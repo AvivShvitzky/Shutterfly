@@ -1,58 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+// Libraries and Style
+import "./App.css";
+import { useEffect } from "react";
 
-function App() {
+// Components
+import Gallery from "./components/gallery/Gallery";
+import Sidebar from "./components/Sidebar/Sidebar";
+
+// Store
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getDogs,
+  getDogsImages,
+  selectDogs,
+  increaseDogLike,
+} from "./store/dogs/dogsSlice";
+
+export default function App() {
+  const dispatch = useDispatch();
+  const dogs = useSelector(selectDogs);
+
+  useEffect(() => {
+    const fetchDogs = async () => {
+      try {
+        const dogs = await dispatch(getDogs()).unwrap();
+        dispatch(getDogsImages(dogs));
+      } catch (err) {
+        // handle error
+      }
+    };
+    fetchDogs();
+  }, [dispatch]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <Sidebar dogs={dogs} />
+      <Gallery
+        dogs={dogs}
+        onImageClick={(breed) => dispatch(increaseDogLike(breed))}
+      />
     </div>
   );
 }
-
-export default App;
