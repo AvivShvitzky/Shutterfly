@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dogsReducer from "./dogs/dogsSlice";
+import restaurantReducer from "./restaurant/restaurantSlice";
 
 export const store = configureStore({
   reducer: {
-    dogs: dogsReducer,
+    restaurant: restaurantReducer,
   },
 });
